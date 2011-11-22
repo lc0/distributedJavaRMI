@@ -7,22 +7,19 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
 
-public class Server implements Runnable, RemoteInterface {
-	int N;
-	String serverIp;
+public class Server implements Runnable, RemoteInterface {	
 	int port;
 	String serverName;
 	
 	
-	public Server(int n, int port) {
-		this.N = n;		
+	public Server(int port) {				
 		this.port = port;
 		this.serverName = "RMIComputations";	
 	}
 	
 	@Override
 	public void run() {
-		System.out.println(" [*] Inside server thread.");
+		System.out.println(" [*] Client thread has been started");
 		
 		try {
 			RemoteInterface serverImp = (RemoteInterface)UnicastRemoteObject.exportObject(this,0);
@@ -42,30 +39,30 @@ public class Server implements Runnable, RemoteInterface {
 			e.printStackTrace();
 		}
 		
+		
+		System.out.println(" [*] Client thread has been finished");
+		
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Welcome to distributing computing with Java.Sockets.");
+		System.out.println("Welcome to distributing computing with Java.RMI.");
 		System.out.println("Student: Sergii Khomenko.\r\n");
 		System.out.println("Server application with task: a=max(MB*MC+MO+ME+MR)\r\n");
 		
 		System.out.println("Please enter port of the server: ");
 		int port = new Scanner(System.in).nextInt();		
-		System.out.println("Please enter number of nodes(with server node): ");
-		int nodes = new Scanner(System.in).nextInt();
-		System.out.println("Please enter N: ");
-		int N = new Scanner(System.in).nextInt();
 		
-		new Thread(new Server(N, port)).start();
+		
+		new Thread(new Server(port)).start();
 
 	}
 
 	@Override
 	public int remoteComputations() throws RemoteException {
-		System.out.println("inside computations");
+		System.out.println("  [~] Stub for remote computations on the server node");
 		return 0;
 	}
 }
