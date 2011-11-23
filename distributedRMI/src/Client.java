@@ -77,8 +77,11 @@ public class Client implements Runnable {
 		for (int i = 0; i < nodes.size(); i++) {
 			try {				
 				nodes.get(i).serverLink.setNodeId(i, coresOffset);
-				nodes.get(i).startComputation(smonitor);
-				coresOffset += nodes.get(i).getCoresNumberLocal(); 
+				coresOffset += nodes.get(i).getCoresNumberLocal();
+				long result = nodes.get(i).startComputation(smonitor);				
+				smonitor.setMax(result);
+				//smonitor.finishCalculation();
+				 
 				System.out.println("  [+] Remote computations on the server node #" + i + " has been started");
 				
 			} catch (RemoteException e) {
@@ -87,7 +90,7 @@ public class Client implements Runnable {
 			}
 		}
 		
-		smonitor.waitCalculationsResult();
+		//smonitor.waitCalculationsResult();
 		System.out.println(" [=] Result: a=" + smonitor.getMax());
 		
 		System.out.println(" [*] Client thread has been finished");

@@ -69,7 +69,7 @@ public class Server implements Runnable, RemoteInterface {
 	}
 
 	@Override
-	public int remoteComputations(ServerMonitor smonitor) throws RemoteException {
+	public long remoteComputations(ServerMonitor smonitor) throws RemoteException {
 		System.out.println(" [*] RMI method on the server node" + nodeId + " has been started");
 		int H = smonitor.getH();
 		
@@ -87,12 +87,10 @@ public class Server implements Runnable, RemoteInterface {
 			new Thread(new CoreCalculations(cmonitor, i)).start();
 		}
 				
-		cmonitor.waitCalculationsResult();		
-		smonitor.setMax(cmonitor.getMax());		
-		smonitor.finishCalculation();		
+		cmonitor.waitCalculationsResult();				
 		
 		System.out.println(" [*] RMI method on the server node" + nodeId + " has been finished");
-		return 0;
+		return cmonitor.getMax();
 	}
 
 	@Override

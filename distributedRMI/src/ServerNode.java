@@ -36,8 +36,8 @@ public class ServerNode {
 		return coresNumber;
 	}
 
-	public void startComputation(ServerMonitor smonitor) throws RemoteException {
-		serverLink.remoteComputations(smonitor);
+	public long startComputation(ServerMonitor smonitor) throws RemoteException {
+		return serverLink.remoteComputations(smonitor);
 		
 	}
 	
