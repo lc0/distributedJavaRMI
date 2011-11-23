@@ -27,7 +27,7 @@ public class ClientMonitor {
 		}
 		else {
 			notify();
-			System.out.println("wake up, Neo! - cm");
+			//System.out.println("wake up, Neo! - cm");
 		}
 	}		
 	
@@ -43,8 +43,8 @@ public class ClientMonitor {
 	public synchronized void setH(int h) {
 		H = h;
 	}
-	public synchronized Matrix getMBH() {
-		return MBH;
+	public synchronized Matrix getMBH(int coreId) {
+		return MBH.getPartMatrix(coreId*H, H);
 	}
 	public synchronized void setMBH(Matrix mBH) {
 		MBH = mBH;
@@ -55,8 +55,8 @@ public class ClientMonitor {
 	public synchronized void setMC(Matrix mC) {
 		MC = mC;
 	}
-	public synchronized Matrix getMOH() {
-		return MOH;
+	public synchronized Matrix getMOH(int coreId) {
+		return MOH.getPartMatrix(coreId*H, H);
 	}
 	public synchronized void setMOH(Matrix mOH) {
 		MOH = mOH;
@@ -67,8 +67,8 @@ public class ClientMonitor {
 	public synchronized void setME(Matrix mE) {
 		ME = mE;
 	}
-	public synchronized Matrix getMRH() {
-		return MRH;
+	public synchronized Matrix getMRH(int coreId) {
+		return MRH.getPartMatrix(coreId*H, H);
 	}
 	public synchronized void setMRH(Matrix mRH) {
 		MRH = mRH;

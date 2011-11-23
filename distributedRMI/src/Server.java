@@ -76,9 +76,9 @@ public class Server implements Runnable, RemoteInterface {
 		cmonitor.setH(smonitor.getH());
 		cmonitor.setMBH(smonitor.getMBH(coresOffset, coresNumber*H));
 		cmonitor.setMC(smonitor.getMC());
-		cmonitor.setMOH(smonitor.getMOH(nodeId, coresNumber*H));
+		cmonitor.setMOH(smonitor.getMOH(coresOffset, coresNumber*H));
 		cmonitor.setME(smonitor.getME());
-		cmonitor.setMRH(smonitor.getMBH(nodeId, coresNumber*H));
+		cmonitor.setMRH(smonitor.getMRH(coresOffset, coresNumber*H));
 		
 		for (int i = 0; i < coresNumber; i++) {
 			new Thread(new CoreCalculations(cmonitor, i)).start();

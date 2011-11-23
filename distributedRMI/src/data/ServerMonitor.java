@@ -24,7 +24,10 @@ public class ServerMonitor implements Serializable {
 		MC = mC;
 		MO = mO;
 		ME = mE;
-		MR = mR;	
+		MR = mR;
+		
+		System.out.println("Result from servermonitor "+ MR.get(2, 2));
+		
 		nodesCount = count;
 		
 		N = MB.getLength();
@@ -77,11 +80,11 @@ public class ServerMonitor implements Serializable {
 	public synchronized void finishCalculation () {
 		if (finishedNumber-1>0) {
 			finishedNumber--;
-			System.out.println("finishedNumber="+finishedNumber);
+			//System.out.println("finishedNumber="+finishedNumber);
 		}
 		else {
 			notify();
-			System.out.println("wake up, Neo! - sm");
+			//System.out.println("wake up, Neo! - sm");
 		}
 	}
 	

@@ -62,7 +62,7 @@ public class Client implements Runnable {
 		
 		MB.fillWithOnes(); MC.fillWithOnes(); MO.fillWithOnes();
 		ME.fillWithOnes(); MR.fillWithOnes();
-		//MB.set(100, 1, 1);
+		MR.set(10, 3, 3);
 		
 		//sharing input data among remote nodes
 		System.out.println(" [+] Sharing data with distributed nodes");
@@ -77,9 +77,7 @@ public class Client implements Runnable {
 			try {				
 				nodes.get(i).serverLink.setNodeId(i, coresOffset);
 				coresOffset += nodes.get(i).getCoresNumberLocal();
-				long result = nodes.get(i).startComputation(smonitor);				
-				smonitor.setMax(result);
-				//smonitor.finishCalculation();
+				nodes.get(i).startComputation(smonitor);				
 				 
 				System.out.println("  [+] Remote computations on the server node #" + i + " has been started");
 				
@@ -89,7 +87,7 @@ public class Client implements Runnable {
 			}
 		}
 		
-		//smonitor.waitCalculationsResult();
+		smonitor.waitCalculationsResult();
 		System.out.println(" [=] Result: a=" + smonitor.getMax());
 		
 		System.out.println(" [*] Client thread has been finished");
@@ -115,7 +113,7 @@ public class Client implements Runnable {
 		}
 		
 		new Thread(new Client(N, nodes)).start();
-		new Thread(new Server(9090)).start();
+		//new Thread(new Server(9090)).start();
 	}	
 
 }

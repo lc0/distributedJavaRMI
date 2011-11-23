@@ -3,10 +3,11 @@ import java.rmi.RemoteException;
 import data.ServerMonitor;
 
 
-public class ServerNode {
+public class ServerNode implements Runnable {
 	int port;
 	String ipAddress;
 	int coresNumber;	
+	ServerMonitor monitor;
 
 	RemoteInterface serverLink;
 
@@ -36,8 +37,22 @@ public class ServerNode {
 		return coresNumber;
 	}
 
-	public long startComputation(ServerMonitor smonitor) throws RemoteException {
-		return serverLink.remoteComputations(smonitor);
+	public void startComputation(ServerMonitor smonitor) throws RemoteException {
+		monitor = smonitor;  
+		new Thread(this).start();
+		
+	}
+
+	@Override
+	public void run() {
+		try {
+			monitor.setMax(serverLink.remoteComputations(monitor));
+			monitor.finishCalculation();
+			
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
