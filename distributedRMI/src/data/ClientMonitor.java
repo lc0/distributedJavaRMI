@@ -27,7 +27,7 @@ public class ClientMonitor {
 		}
 		else {
 			notify();
-			System.out.println("wake up, Neo!");
+			System.out.println("wake up, Neo! - cm");
 		}
 	}		
 	

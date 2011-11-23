@@ -81,7 +81,7 @@ public class ServerMonitor implements Serializable {
 		}
 		else {
 			notify();
-			System.out.println("wake up, Neo!");
+			System.out.println("wake up, Neo! - sm");
 		}
 	}
 	
