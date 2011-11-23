@@ -1,12 +1,9 @@
 import java.rmi.AccessException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
-
-import javax.print.attribute.standard.Finishings;
 
 import data.ClientMonitor;
 import data.ServerMonitor;

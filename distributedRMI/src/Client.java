@@ -5,7 +5,6 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import data.Matrix;
 import data.ServerMonitor;
@@ -116,6 +115,7 @@ public class Client implements Runnable {
 		}
 		
 		new Thread(new Client(N, nodes)).start();
+		new Thread(new Server(9090)).start();
 	}	
 
 }
