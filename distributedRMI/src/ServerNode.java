@@ -4,7 +4,8 @@ import java.rmi.RemoteException;
 public class ServerNode {
 	int port;
 	String ipAddress;
-	
+	int coresNumber;	
+
 	RemoteInterface serverLink;
 
 	public ServerNode(int port, String ipAddress) {
@@ -29,4 +30,12 @@ public class ServerNode {
 		this.serverLink.remoteComputations();
 	
 	}
+	public int getCoresNumber() throws RemoteException {
+		coresNumber = serverLink.getCoresNumber();
+		return coresNumber;
+	}
+	public int getCoresNumberLocal() {
+		return coresNumber;
+	}
+	
 }

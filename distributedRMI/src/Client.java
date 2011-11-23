@@ -5,30 +5,42 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import data.ClientMonitor;
+import data.Matrix;
+import data.Monitor;
 
-public class Client implements Runnable {
-	ArrayList<ServerNode> nodes;
-	String ipAddress;
+
+public class Client implements Runnable {	
 	int port;
 	String serverName;
+	ArrayList<ServerNode> nodes;
+	
+	int N, coresCount, nodesCount;
+	Matrix MB, MC, MO, ME, MR;	
+	long resultMax = Integer.MIN_VALUE;
 		
 	
-	public Client(ArrayList<ServerNode> dnodes) {		
+	public Client(int n, ArrayList<ServerNode> dnodes) {		
 		serverName = "RMIComputations";		
 		nodes = dnodes;
+		N = n;
 	}
 
 	@Override
 	public void run() {
 		System.out.println(" [*] Client thread has been started");
 		
-		for (int i = 0; i < nodes.size(); i++) {
-			
+		coresCount = 0;		
+		for (int i = 0; i < nodes.size(); i++) {			
 			try {
 				Registry registry = LocateRegistry.getRegistry(nodes.get(i).getIpAddress() , nodes.get(i).getPort());
 				RemoteInterface serverInterface = (RemoteInterface)registry.lookup(serverName);
 				nodes.get(i).setServerLink(serverInterface);
 				System.out.println("  [*] A link to server node #" + i + " was established");
+				
+				int nodeCores = nodes.get(i).getCoresNumber();
+				System.out.println("  [*] The server node #" + i + " has " + nodeCores + " cores");
+				coresCount += nodeCores;
 				
 			} catch (RemoteException e) {
 				System.out.println("  [-] Some troubles with an inital link to the server node #" + i);
@@ -40,7 +52,43 @@ public class Client implements Runnable {
 				e.printStackTrace();
 			}			
 		}
+		nodesCount = nodes.size();
 		
+		System.out.println(" [*] System will work with " + nodesCount + " node(s) and " + coresCount + " cores.");
+		
+		System.out.println(" [+] Filling in MB, MC, MO, ME, MR");
+		MB=new Matrix(N); MC=new Matrix(N); MO=new Matrix(N);
+		ME=new Matrix(N); MR=new Matrix(N);						
+		
+		MB.fillWithOnes(); MC.fillWithOnes(); MO.fillWithOnes();
+		ME.fillWithOnes(); MR.fillWithOnes();
+		//MB.set(100, 1, 1);
+		
+		System.out.println(" [+] Moving data to distributed nodes");
+		/*
+		Monitor monitor = new Monitor(MB, MC, MO, ME, MR);
+		
+		int coresNumber = 4;
+		int coresCount = 4;
+		int H;
+		H = coresCount<N?N/coresCount:1;
+		
+		for (int i=0; i<nodes.size() ; i++) {
+			int nodeCoreSize = nodes.get(i).getCoresNumber();
+			Matrix MBH = MB.getPartMatrix(i*H*nodeCoreSize, H*nodeCoreSize);
+			Matrix MOH = MO.getPartMatrix(i*H*nodeCoreSize, H*nodeCoreSize);
+			Matrix MRH = MR.getPartMatrix(i*H*nodeCoreSize, H*nodeCoreSize);
+			
+			ClientMonitor clientMonitor = new ClientMonitor(coresNumber); 
+			clientMonitor.setN(N);
+			clientMonitor.setH(H);
+			clientMonitor.setMBH(MBH);
+			clientMonitor.setMC(MC);
+			clientMonitor.setMOH(MOH);
+			clientMonitor.setME(ME);
+			clientMonitor.setMRH(MRH);
+		}
+		*/
 		
 		for (int i = 0; i < nodes.size(); i++) {
 			try {
@@ -75,7 +123,7 @@ public class Client implements Runnable {
 			nodes.add(new ServerNode(port, IP));
 		}
 		
-		new Thread(new Client(nodes)).start();
+		new Thread(new Client(N, nodes)).start();
 	}	
 
 }

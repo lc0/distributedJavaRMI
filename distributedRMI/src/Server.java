@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Server implements Runnable, RemoteInterface {	
 	int port;
 	String serverName;
+	int coresNumber;
 	
 	
 	public Server(int port) {				
@@ -26,7 +27,7 @@ public class Server implements Runnable, RemoteInterface {
 			//RemoteInterface  serverImp = new RemoteInterface();
 			Registry registry = LocateRegistry.createRegistry(port);
 			
-			registry.rebind(serverName, serverImp);
+			registry.rebind(serverName, serverImp);			
 			System.out.println(" [*] Server with RMIRegistry has started.");
 			
 			
@@ -50,7 +51,7 @@ public class Server implements Runnable, RemoteInterface {
 	public static void main(String[] args) {
 		System.out.println("Welcome to distributing computing with Java.RMI.");
 		System.out.println("Student: Sergii Khomenko.\r\n");
-		System.out.println("Server application with task: a=max(MB*MC+MO+ME+MR)\r\n");
+		System.out.println("Server application with task: a=max(MB*MC+MO*ME+MR)\r\n");
 		
 		System.out.println("Please enter port of the server: ");
 		int port = new Scanner(System.in).nextInt();		
@@ -64,5 +65,12 @@ public class Server implements Runnable, RemoteInterface {
 	public int remoteComputations() throws RemoteException {
 		System.out.println("  [~] Stub for remote computations on the server node");
 		return 0;
+	}
+
+	@Override
+	public int getCoresNumber() throws RemoteException {
+		coresNumber = Runtime.getRuntime().availableProcessors();
+		System.out.println(" [*] Information about cores has been sended");
+		return coresNumber;
 	}
 }
