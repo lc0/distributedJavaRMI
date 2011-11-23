@@ -42,7 +42,8 @@ public class CoreCalculations implements Runnable {
 			}
 		}
 		
-		if (coreMax>clientMonitor.getMax()) clientMonitor.setMax(coreMax);
+		if (coreMax>clientMonitor.getMax()) 
+			clientMonitor.setMax(coreMax);		
 		clientMonitor.finishCalculation();
 		System.out.println("   [*] Calculations have been finished on core #" + coreId + ".");		
 		

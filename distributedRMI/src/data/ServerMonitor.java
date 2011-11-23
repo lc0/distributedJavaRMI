@@ -1,10 +1,16 @@
 package data;
 
+import java.io.Serializable;
+
 /**
  * A monitor for sharing input data among distributed nodes.
  * 
  */
-public class ServerMonitor {
+public class ServerMonitor implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 774891327638898212L;
 	Matrix MB, MC, MO, ME, MR;
 	int N, H;
 	long resultMax = Integer.MIN_VALUE;
@@ -69,10 +75,14 @@ public class ServerMonitor {
 	}
 	
 	public synchronized void finishCalculation () {
-		if (finishedNumber>0) {
+		if (finishedNumber-1>0) {
 			finishedNumber--;
+			System.out.println("finishedNumber="+finishedNumber);
 		}
-		else notify();
+		else {
+			notify();
+			System.out.println("wake up, Neo!");
+		}
 	}
 	
 	public synchronized void setMax(long max) {

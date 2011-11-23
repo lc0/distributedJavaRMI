@@ -12,7 +12,7 @@ public class ClientMonitor {
 	private int finishedNumber;
 	
 	public synchronized void waitCalculationsResult() {
-		if (finishedNumber>=0)
+		if (finishedNumber>0)
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -22,10 +22,13 @@ public class ClientMonitor {
 	}
 	
 	public synchronized void finishCalculation () {
-		if (finishedNumber>0) {
-			finishedNumber--;
+		if (finishedNumber-1>0) {
+			finishedNumber--;			
 		}
-		else notify();
+		else {
+			notify();
+			System.out.println("wake up, Neo!");
+		}
 	}		
 	
 	public synchronized int getN() {

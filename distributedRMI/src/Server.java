@@ -86,10 +86,10 @@ public class Server implements Runnable, RemoteInterface {
 		for (int i = 0; i < coresNumber; i++) {
 			new Thread(new CoreCalculations(cmonitor, i)).start();
 		}
-		
-		cmonitor.waitCalculationsResult();
-		smonitor.setMax(cmonitor.getMax());
-		smonitor.finishCalculation();
+				
+		cmonitor.waitCalculationsResult();		
+		smonitor.setMax(cmonitor.getMax());		
+		smonitor.finishCalculation();		
 		
 		System.out.println(" [*] RMI method on the server node" + nodeId + " has been finished");
 		return 0;
