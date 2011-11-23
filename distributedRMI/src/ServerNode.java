@@ -1,5 +1,7 @@
 import java.rmi.RemoteException;
 
+import data.ServerMonitor;
+
 
 public class ServerNode {
 	int port;
@@ -25,17 +27,18 @@ public class ServerNode {
 	public void setServerLink(RemoteInterface serverLink) {
 		this.serverLink = serverLink;
 	}
-	
-	public void startComputation () throws RemoteException {
-		this.serverLink.remoteComputations();
-	
-	}
+
 	public int getCoresNumber() throws RemoteException {
 		coresNumber = serverLink.getCoresNumber();
 		return coresNumber;
 	}
 	public int getCoresNumberLocal() {
 		return coresNumber;
+	}
+
+	public void startComputation(ServerMonitor smonitor) throws RemoteException {
+		serverLink.remoteComputations(smonitor);
+		
 	}
 	
 }

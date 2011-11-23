@@ -5,9 +5,10 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import data.ClientMonitor;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import data.Matrix;
-import data.Monitor;
+import data.ServerMonitor;
 
 
 public class Client implements Runnable {	
@@ -15,7 +16,7 @@ public class Client implements Runnable {
 	String serverName;
 	ArrayList<ServerNode> nodes;
 	
-	int N, coresCount, nodesCount;
+	int N, H, coresCount, nodesCount;
 	Matrix MB, MC, MO, ME, MR;	
 	long resultMax = Integer.MIN_VALUE;
 		
@@ -64,35 +65,20 @@ public class Client implements Runnable {
 		ME.fillWithOnes(); MR.fillWithOnes();
 		//MB.set(100, 1, 1);
 		
-		System.out.println(" [+] Moving data to distributed nodes");
-		/*
-		Monitor monitor = new Monitor(MB, MC, MO, ME, MR);
-		
-		int coresNumber = 4;
-		int coresCount = 4;
-		int H;
+		//sharing input data among remote nodes
+		System.out.println(" [+] Sharing data with distributed nodes");
 		H = coresCount<N?N/coresCount:1;
+		ServerMonitor smonitor = new ServerMonitor(H, nodesCount, MB, MC, MO, ME, MR);		
 		
-		for (int i=0; i<nodes.size() ; i++) {
-			int nodeCoreSize = nodes.get(i).getCoresNumber();
-			Matrix MBH = MB.getPartMatrix(i*H*nodeCoreSize, H*nodeCoreSize);
-			Matrix MOH = MO.getPartMatrix(i*H*nodeCoreSize, H*nodeCoreSize);
-			Matrix MRH = MR.getPartMatrix(i*H*nodeCoreSize, H*nodeCoreSize);
-			
-			ClientMonitor clientMonitor = new ClientMonitor(coresNumber); 
-			clientMonitor.setN(N);
-			clientMonitor.setH(H);
-			clientMonitor.setMBH(MBH);
-			clientMonitor.setMC(MC);
-			clientMonitor.setMOH(MOH);
-			clientMonitor.setME(ME);
-			clientMonitor.setMRH(MRH);
-		}
-		*/
 		
+		System.out.println(" [*] Starting computations on distributed nodes");
+		
+		int coresOffset=0;
 		for (int i = 0; i < nodes.size(); i++) {
-			try {
-				nodes.get(i).startComputation();
+			try {				
+				nodes.get(i).serverLink.setNodeId(i, coresOffset);
+				nodes.get(i).startComputation(smonitor);
+				coresOffset += nodes.get(i).getCoresNumberLocal(); 
 				System.out.println("  [+] Remote computations on the server node #" + i + " has been started");
 				
 			} catch (RemoteException e) {
@@ -100,6 +86,9 @@ public class Client implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		
+		smonitor.waitCalculationsResult();
+		System.out.println(" [=] Result: a=" + smonitor.getMax());
 		
 		System.out.println(" [*] Client thread has been finished");
 	}

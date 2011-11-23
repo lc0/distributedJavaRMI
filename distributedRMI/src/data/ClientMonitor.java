@@ -8,7 +8,7 @@ public class ClientMonitor {
 	private int N;
 	private int H;
 	private Matrix MBH, MC, MOH, ME, MRH;
-	private long max;
+	private long resultMax = Integer.MIN_VALUE;
 	private int finishedNumber;
 	
 	public synchronized void waitCalculationsResult() {
@@ -71,9 +71,10 @@ public class ClientMonitor {
 		MRH = mRH;
 	}
 	public synchronized long getMax() {
-		return max;
+		return resultMax;
 	}
 	public synchronized void setMax(long max) {
-		this.max = max;
+		if (max > resultMax)
+			this.resultMax = max;
 	}	
 }

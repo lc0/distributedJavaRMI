@@ -6,11 +6,18 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
+import javax.print.attribute.standard.Finishings;
+
+import data.ClientMonitor;
+import data.ServerMonitor;
+
 
 public class Server implements Runnable, RemoteInterface {	
 	int port;
 	String serverName;
 	int coresNumber;
+	int nodeId;
+	int coresOffset;
 	
 	
 	public Server(int port) {				
@@ -62,8 +69,29 @@ public class Server implements Runnable, RemoteInterface {
 	}
 
 	@Override
-	public int remoteComputations() throws RemoteException {
-		System.out.println("  [~] Stub for remote computations on the server node");
+	public int remoteComputations(ServerMonitor smonitor) throws RemoteException {
+		System.out.println(" [*] RMI method on the server node" + nodeId + " has been started");
+		int H = smonitor.getH();
+		
+		System.out.println("   [*] Sharing data among cores");		
+		ClientMonitor cmonitor = new ClientMonitor(coresNumber);
+		cmonitor.setN(smonitor.getN());
+		cmonitor.setH(smonitor.getH());
+		cmonitor.setMBH(smonitor.getMBH(coresOffset, coresNumber*H));
+		cmonitor.setMC(smonitor.getMC());
+		cmonitor.setMOH(smonitor.getMOH(nodeId, coresNumber*H));
+		cmonitor.setME(smonitor.getME());
+		cmonitor.setMRH(smonitor.getMBH(nodeId, coresNumber*H));
+		
+		for (int i = 0; i < coresNumber; i++) {
+			new Thread(new CoreCalculations(cmonitor, i)).start();
+		}
+		
+		cmonitor.waitCalculationsResult();
+		smonitor.setMax(cmonitor.getMax());
+		smonitor.finishCalculation();
+		
+		System.out.println(" [*] RMI method on the server node" + nodeId + " has been finished");
 		return 0;
 	}
 
@@ -72,5 +100,12 @@ public class Server implements Runnable, RemoteInterface {
 		coresNumber = Runtime.getRuntime().availableProcessors();
 		System.out.println(" [*] Information about cores has been sended");
 		return coresNumber;
+	}
+
+	@Override
+	public void setNodeId(int id, int offset) throws RemoteException {
+		this.nodeId = id;
+		this.coresOffset = offset;
+		
 	}
 }
