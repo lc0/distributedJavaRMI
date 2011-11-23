@@ -24,9 +24,7 @@ public class ServerMonitor implements Serializable {
 		MC = mC;
 		MO = mO;
 		ME = mE;
-		MR = mR;
-		
-		System.out.println("Result from servermonitor "+ MR.get(2, 2));
+		MR = mR;		
 		
 		nodesCount = count;
 		
